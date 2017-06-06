@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
-<body>
-    <!-- Add your EJS code here -->
-    <% for (let key in urls) { %>
-    <div>
-      <code><strong><%= key %>:</strong> <%= urls[key] %></code>
-    </div>
-    <% } %>
-    <a href="add">Add a new link</a>
-</body>
-</html>
+<%- include partials/_header %>
+<% for (let key in urls) { %>
+<div>
+  <code><strong><%= key %>:</strong> <%= urls[key] %></code>
+</div>
+<% } %>
+<a href="add">Add a new link</a>
+<%- include partials/_footer %>
