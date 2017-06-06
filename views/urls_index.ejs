@@ -1,8 +1,10 @@
 <%- include partials/_header %>
-<% for (let key in urls) { %>
-<div>
-  <code><strong><%= key %>:</strong> <%= urls[key] %></code>
-</div>
-<% } %>
+<ul>
+  <% for (let key in urls) { %>
+  <li>
+    <code><strong><%= key %>:</strong> <%= urls[key] %></code>
+  </li>
+  <% } %>
+</ul>
 <a href="add">Add a new link</a>
 <%- include partials/_footer %>
