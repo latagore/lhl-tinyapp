@@ -3,4 +3,9 @@
   <div>Short URL: <%= shortURL %></div>
   <div>Long URL: <%= longURL %></div>
 </code>
+<form method="POST" action="/urls/<%= shortURL %>/update">
+  <label for="url">Update URL</label>
+  <input type="text" name="url" required="required" />
+  <button type="submit">Update</button>
+</form>
 <%- include partials/_footer %>
