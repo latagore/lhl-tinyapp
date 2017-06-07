@@ -3,6 +3,10 @@
   <% for (let key in urls) { %>
   <li>
     <code><strong><%= key %>:</strong> <%= urls[key] %></code>
+    <form method="POST" action="/urls/<%= key %>/delete">
+      <button type="submit">Delete</button>
+    </form>
+
   </li>
   <% } %>
 </ul>
