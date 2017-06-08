@@ -59,7 +59,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+  res.render("register", {user: users[req.cookies.user_id]});
 });
 
 app.post("/register", (req, res) => {
@@ -79,7 +79,7 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  res.render("urls_new", {user: users[req.cookies.user_id]});
 });
 
 app.get("/urls", (req, res) => {
@@ -102,7 +102,8 @@ app.get("/urls/:id", (req, res) => {
   const id = req.params.id;
   const templateVars = { 
     shortURL: id,
-    longURL: urlDatabase[id]
+    longURL: urlDatabase[id],
+    user: users[req.cookies.user_id]
   };
   res.render("urls_show", templateVars);
 });
