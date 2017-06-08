@@ -37,7 +37,6 @@ function generateRandomString() {
 }
 
 app.post("/login", (req, res) => {
-  //const user = users[req.body.email];
   let user;
   for (const id in users) {
     const u = users[id];
@@ -83,13 +82,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  let key = generateRandomString();
-  urlDatabase[key] = req.body.longURL;
-  res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
-});
-
 app.get("/urls", (req, res) => {
   const templateVars = { 
     urls: urlDatabase,
@@ -97,6 +89,14 @@ app.get("/urls", (req, res) => {
   };
   res.render("urls_index", templateVars);
 });
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // debug statement to see POST parameters
+  let key = generateRandomString();
+  urlDatabase[key] = req.body.longURL;
+  res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
+});
+
 
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id;
