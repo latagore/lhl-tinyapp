@@ -36,6 +36,14 @@ function generateRandomString() {
   return result.join('');
 }
 
+app.get("/login", (req, res) => {
+  if (users[req.cookies.user_id]) {
+    res.redirect("/urls");
+  } else {
+    res.render("login", {user: users[req.cookies.user_id]});
+  }
+});
+
 app.post("/login", (req, res) => {
   let user;
   for (const id in users) {
