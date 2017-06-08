@@ -87,7 +87,11 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new", {user: users[req.cookies.user_id]});
+  if (req.cookies.user_id) {
+    res.render("urls_new", {user: users[req.cookies.user_id]});
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls", (req, res) => {
