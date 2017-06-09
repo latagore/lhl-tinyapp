@@ -61,6 +61,14 @@ function isURL(string) {
   return validator.isURL(string, IS_URL_OPTIONS);
 }
 
+function findUserByEmail(email) {
+  for (let key in users) {
+    if (users[key].email === email) {
+      return users[key];
+    }
+  }
+}
+
 // ============================
 // user login management routes
 // ============================
@@ -106,6 +114,12 @@ app.post("/register", (req, res) => {
     res.status(400).send("email or password can't be blank");
     return;
   }
+  
+  if (findUserByEmail(email)) {
+    res.status(400).send("this email is already taken.");
+    return;
+  }
+  
   const id = generateRandomString();
   const hash = bcrypt.hashSync(password, 10);
   users[id] = { id, email, hash };
