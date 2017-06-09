@@ -9,8 +9,14 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    link: "http://www.lighthouselabs.ca",
+    ownerId: "userRandomID"
+  },
+  "9sm5xK": {
+    link: "http://www.google.com",
+    ownerId: "user2RandomID"
+  }
 };
 
 const users = { 
@@ -34,6 +40,17 @@ function generateRandomString() {
     result.push(POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length)));
   }
   return result.join('');
+}
+
+function urlsForUser(user_id) {
+  const result = {};
+  for (let key in urlDatabase) {
+    const urlEntry = urlDatabase[key];
+    if (urlEntry.ownerId === user_id) {
+      result[key] = urlEntry;
+    }
+  }
+  return result;
 }
 
 app.get("/login", (req, res) => {
@@ -105,33 +122,51 @@ app.get("/urls", (req, res) => {
 app.post("/urls", (req, res) => {
   console.log(req.body);  // debug statement to see POST parameters
   let key = generateRandomString();
-  urlDatabase[key] = req.body.longURL;
+  urlDatabase[key] = {
+    ownerId: req.cookies.user_id,
+    link: req.body.longURL
+  };
   res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
 });
 
 
 app.get("/urls/:id", (req, res) => {
-  const id = req.params.id;
-  const templateVars = { 
-    shortURL: id,
-    longURL: urlDatabase[id],
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_show", templateVars);
+  const urlEntry = urlDatabase[req.params.id];
+  if (req.cookies.user_id === urlEntry.ownerId) {
+    const id = req.params.id;
+    const templateVars = { 
+      shortURL: id,
+      longURL: urlEntry.link,
+      user: users[req.cookies.user_id]
+    };
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(403).send("not authorized to view this url");
+  }
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.params.id];
-  res.redirect('/urls');
+  const urlEntry = urlDatabase[req.params.id];
+  if (req.cookies.user_id === urlEntry.ownerId) {
+    delete urlDatabase[req.params.id];
+    res.redirect('/urls');
+  } else {
+    res.status(403).send("not authorized to delete this url");
+  }
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.params.id] = req.body.url;
-  res.redirect(`/urls/${req.params.id}`);
+  const urlEntry = urlDatabase[req.params.id];
+  if (req.cookies.user_id === urlEntry.ownerId) {
+    urlDatabase[req.params.id].link = req.body.url;
+    res.redirect(`/urls/${req.params.id}`);
+  } else {
+    res.status(403).send("not authorized to edit this url");
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL].link;
   if (longURL) {
     res.redirect(longURL);
   } else {
