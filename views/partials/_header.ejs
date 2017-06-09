@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
   <title>TinyApp</title>
+  <style>
+    form {
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
   <% if (typeof user === 'undefined') { %>
@@ -11,21 +16,20 @@
       <button type="submit">Login</button>
     </form>
   <% } else { %>
-    <p>Hello <%= user.email %>!</p>
-    <form method="POST" action="/logout">
-      <button type="submit">Logout</button>
-    </form>
+    <div>
+      Hello <%= user.email %>!
+    </div>
+    
   <% } %>
   <nav>
     <a href="/urls">
       Main
     </a>
     
-    <a href="/register">
-      Register
-    </a>
-    
-    <a href="/login">
-      Login
-    </a>
+    <% if (!user) {%>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } else { %>
+      <a href="/logout">Logout</a>
+    <% } %>
   </nav>

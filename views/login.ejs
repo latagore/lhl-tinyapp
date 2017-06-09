@@ -1,12 +1,16 @@
 <%- include partials/_header %>
  <form action="/login" method="POST" style="margin:150px;">
   <h2>LOGIN</h2>
-  <label>
-    Username: <input type="email" name="email" placeholder="john@example.com" />
-  </label>
-  <label>
-    Password: <input type="password" name="password" />
-  </label>
+  <div>
+    <label>
+      Username: <input type="email" name="email" placeholder="john@example.com" />
+    </label>
+  </div> 
+  <div>
+    <label>
+      Password: <input type="password" name="password" />
+    </label>
+   </div>
   <input type="submit" value="Submit">
 </form>
 <%- include partials/_footer %>

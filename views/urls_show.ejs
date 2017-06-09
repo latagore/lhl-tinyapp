@@ -1,11 +1,11 @@
 <%- include partials/_header %>
 <code>
   <div>Short URL: <%= shortURL %></div>
-  <div>Long URL: <%= longURL %></div>
+  <div>Long URL: <a href="longURL"><%= longURL %></a></div>
 </code>
 <form method="POST" action="/urls/<%= shortURL %>/update">
   <label for="url">Update URL</label>
-  <input type="text" name="url" required="required" />
+  <input type="text" name="url" value="<%= longURL %>"required="required" />
   <button type="submit">Update</button>
 </form>
 <%- include partials/_footer %>

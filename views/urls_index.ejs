@@ -11,5 +11,10 @@
   </li>
   <% } %>
 </ul>
+<% if (!user) { %>
+  <p>Welcome to <code>SuperCoolUrlShortener</code>! Login or register to create shorter links!</p>
+<% } else if (!urls) { %>
+  <p>You currently don't have any shortened URLs. Click <a href="/urls/new">here</a> to create one.</p>
+<% } %>
 <a href="/urls/new">Add a new link</a>
 <%- include partials/_footer %>
