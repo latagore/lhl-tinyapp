@@ -17,6 +17,10 @@ app.set("view engine", "ejs");
 const urlDatabase = {};
 const users = {};
 
+
+// ============
+// utilities
+// ============
 function generateRandomString() {
   const POSSIBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const SIZE = 6;
@@ -51,8 +55,16 @@ app.get("/login", (req, res) => {
   }
 });
 
+app.get("/register", (req, res) => {
+  res.render("register", {user: users[req.session.user_id]});
+});
+
+// ==================
+// login API routes
+// ==================
 app.post("/login", (req, res) => {
   let user;
+  // find the given user
   for (const id in users) {
     const u = users[id];
     if (u.email === req.body.email &&
@@ -61,23 +73,13 @@ app.post("/login", (req, res) => {
       break;
     }
   }
+  
   if (user) {
     req.session.user_id = user.id;
     res.redirect("/urls");
   } else {
     res.status(403).send("wrong email or password");
   }
-});
-
-app.get("/logout", logoutRoute);
-app.post("/logout", logoutRoute);
-function logoutRoute(req, res) {
-  req.session = null;
-  res.redirect("/urls");
-}
-
-app.get("/register", (req, res) => {
-  res.render("register", {user: users[req.session.user_id]});
 });
 
 app.post("/register", (req, res) => {
@@ -96,6 +98,13 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 
 });
+
+app.get("/logout", logoutRoute);
+app.post("/logout", logoutRoute);
+function logoutRoute(req, res) {
+  req.session = null;
+  res.redirect("/urls");
+}
 
 // ====================
 // URL page routes
@@ -120,9 +129,10 @@ app.get("/urls", (req, res) => {
 });
 
 // View/edit URL page route
-app.get("/urls/:id", (req, res) => {
+app.get("/urls/:id", (req, res, next) => {
   const urlEntry = urlDatabase[req.params.id];
-  if (req.session.user_id === urlEntry.ownerId) {
+  
+  if (urlEntry && req.session.user_id === urlEntry.ownerId) {
     const id = req.params.id;
     const templateVars = { 
       shortURL: id,
@@ -130,8 +140,10 @@ app.get("/urls/:id", (req, res) => {
       user: users[req.session.user_id]
     };
     res.render("urls_show", templateVars);
+  } else if (urlEntry) {
+    res.status(403).send("Not authorized");
   } else {
-    res.status(403).send("not authorized to view this url");
+    res.status(404).send("Not found");
   }
 });
 
@@ -141,12 +153,16 @@ app.get("/urls/:id", (req, res) => {
 
 // Create new URL API route
 app.post("/urls", (req, res) => {
-  let key = generateRandomString();
-  urlDatabase[key] = {
-    ownerId: req.session.user_id,
-    link: req.body.longURL
-  };
-  res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
+  if (req.session.user_id) {
+    let key = generateRandomString();
+    urlDatabase[key] = {
+      ownerId: req.session.user_id,
+      link: req.body.longURL
+    };
+    res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
+  } else {
+    res.status(403).send("not authorized to create a url");
+  }
 });
 
 // Delete URL API route
@@ -175,14 +191,12 @@ app.post("/urls/:id/update", (req, res) => {
 // ============================
 // URL shorten/redirect route
 // ============================
-app.get("/u/:shortURL", (req, res) => {
-  
-  
+app.get("/u/:shortURL", (req, res, next) => {
   let urlEntry = urlDatabase[req.params.shortURL];
   if (urlEntry) {
     res.redirect(urlEntry.link);
   } else {
-    res.send("Not found"); 
+    res.status(404).send("Not found");
   }
 });
 

@@ -1,7 +1,7 @@
 <%- include partials/_header %>
 <code>
   <div>Short URL: <%= shortURL %></div>
-  <div>Long URL: <a href="longURL"><%= longURL %></a></div>
+  <div>Long URL: <a href="<%= longURL %>"><%= longURL %></a></div>
 </code>
 <form method="POST" action="/urls/<%= shortURL %>/update">
   <label for="url">Update URL</label>
