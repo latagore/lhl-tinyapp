@@ -2,10 +2,17 @@
 <article>
   <form method="POST" action="/urls/<%= shortURL %>?_method=PUT">
     <h2>Edit Short URL</h2>
-    <label>Short URL: </label><h3><a href="<%= longURL %>"><%= shortURL %></a></h3>
-    <label for="url">Long URL: <input type="text" name="url" value="<%= longURL %>"required="required" /></label>
+    
+    <label>Short URL: </label>
+    <h3><a href="/u/<%= shortURL %>"><%= shortURL %></a></h3>
+    
+     <label for="url">Long URL: 
+      <input type="text" name="url" value="<%= longURL %>"required="required" />
+    </label>
     
     <button class="button" type="submit">Update</button>
+    
+    <div>Visits: <%= visits %></div>
   </form>
 </article>
 <%- include partials/_footer %>

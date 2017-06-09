@@ -155,6 +155,7 @@ app.get("/urls/:id", (req, res, next) => {
     const templateVars = { 
       shortURL: id,
       longURL: urlEntry.link,
+      visits: urlEntry.visits,
       user: users[req.session.user_id]
     };
     res.render("urls_show", templateVars);
@@ -179,7 +180,8 @@ app.post("/urls", (req, res) => {
     }
     urlDatabase[key] = {
       ownerId: req.session.user_id,
-      link: link
+      link: link,
+      visits: 0
     };
     res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
   } else {
@@ -215,6 +217,7 @@ app.put("/urls/:id", (req, res) => {
 // ============================
 app.get("/u/:shortURL", (req, res, next) => {
   let urlEntry = urlDatabase[req.params.shortURL];
+  urlEntry.visits++;
   if (urlEntry) {
     res.redirect(urlEntry.link);
   } else {

@@ -10,7 +10,7 @@
       </tr>
       <% for (let key in urls) { %>
       <tr>
-        <td><strong><a href="<%= urls[key].link %>"><%= key %></a></strong></td>
+        <td><strong><a href="/u/<%= key %>"><%= key %></a></strong></td>
         <td><a href="<%= urls[key].link %>"><%= urls[key].link %></a></td>
         <td>
           <form method="POST" action="/urls/<%= key %>?_method=DELETE">
