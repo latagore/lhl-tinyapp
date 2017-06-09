@@ -12,7 +12,15 @@
     
     <button class="button" type="submit">Update</button>
     
-    <div>Visits: <%= visits %>, unique visits: <%= uniqueVisits %></div>
   </form>
+  <div>Visits: <%= visits.length %>, unique visits: <%= uniqueVisits %></div>
+  <div class="log">
+  <h5>Visit History (ip, time)</h5>
+    <ol>
+      <% visits.forEach((v) => { %>
+        <li><%= v.id %>, <%= v.time %></li>
+      <% }) %>
+    </ol>
+  </div>
 </article>
 <%- include partials/_footer %>

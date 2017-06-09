@@ -186,7 +186,7 @@ app.post("/urls", (req, res) => {
     urlDatabase[key] = {
       ownerId: req.session.user_id,
       link: link,
-      visits: 0,
+      visits: [],
       uniqueVisits: new Set()
     };
     res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
@@ -224,7 +224,10 @@ app.put("/urls/:id", (req, res) => {
 app.get("/u/:shortURL", (req, res, next) => {
   let urlEntry = urlDatabase[req.params.shortURL];
   if (urlEntry) {
-    urlEntry.visits++;
+    urlEntry.visits.push({
+      time: new Date(),
+      id: req.connection.remoteAddress
+    });
     urlEntry.uniqueVisits.add(req.cookies.session);
     res.redirect(urlEntry.link);
   } else {
