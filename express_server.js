@@ -3,14 +3,18 @@ const app = express();
 const PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const methodOverride = require('method-override');
 const validator = require('validator');
 
+const COOKIE_SECRET = 'uhaeontuhntoidgp,rabiurobkdirpaeueohdp,rudiroedue';
+
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser(COOKIE_SECRET));
 app.use(cookieSession({
   name: 'session',
-  secret: "uhaeontuhntoidgp,rabiurobkdirpaeueohdp,rudiroedue",
+  secret: COOKIE_SECRET,
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
@@ -52,7 +56,7 @@ function urlsForUser(user_id) {
 const IS_URL_OPTIONS = {
   require_protocol: true,
   require_valid_protocol: false
-}
+};
 function isURL(string) {
   return validator.isURL(string, IS_URL_OPTIONS);
 }
@@ -156,6 +160,7 @@ app.get("/urls/:id", (req, res, next) => {
       shortURL: id,
       longURL: urlEntry.link,
       visits: urlEntry.visits,
+      uniqueVisits: urlEntry.uniqueVisits.size,
       user: users[req.session.user_id]
     };
     res.render("urls_show", templateVars);
@@ -181,7 +186,8 @@ app.post("/urls", (req, res) => {
     urlDatabase[key] = {
       ownerId: req.session.user_id,
       link: link,
-      visits: 0
+      visits: 0,
+      uniqueVisits: new Set()
     };
     res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
   } else {
@@ -217,8 +223,9 @@ app.put("/urls/:id", (req, res) => {
 // ============================
 app.get("/u/:shortURL", (req, res, next) => {
   let urlEntry = urlDatabase[req.params.shortURL];
-  urlEntry.visits++;
   if (urlEntry) {
+    urlEntry.visits++;
+    urlEntry.uniqueVisits.add(req.cookies.session);
     res.redirect(urlEntry.link);
   } else {
     res.status(404).send("Not found");
