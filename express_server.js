@@ -13,6 +13,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 app.set("view engine", "ejs");
+app.use(express.static('site'));
 
 const urlDatabase = {};
 const users = {};
@@ -117,6 +118,11 @@ app.get("/urls/new", (req, res) => {
   } else {
     res.redirect("/login");
   }
+});
+
+// main page route
+app.get("/", (req, res) => {
+  res.redirect("/urls");
 });
 
 // Show URLs route
