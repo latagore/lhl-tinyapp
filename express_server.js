@@ -199,9 +199,11 @@ app.post("/urls/:id/update", (req, res) => {
 // URL shorten/redirect route
 // ============================
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL].link;
-  if (longURL) {
-    res.redirect(longURL);
+  
+  
+  let urlEntry = urlDatabase[req.params.shortURL];
+  if (urlEntry) {
+    res.redirect(urlEntry.link);
   } else {
     res.send("Not found"); 
   }
