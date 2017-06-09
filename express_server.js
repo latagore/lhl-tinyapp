@@ -52,13 +52,15 @@ function generateRandomString() {
 
 function urlsForUser(user_id) {
   const result = {};
+  let hasResults = false;
   for (let key in urlDatabase) {
     const urlEntry = urlDatabase[key];
     if (urlEntry.ownerId === user_id) {
       result[key] = urlEntry;
+      hasResults = true;
     }
   }
-  return result;
+  return hasResults ? result : undefined;
 }
 
 app.get("/login", (req, res) => {
