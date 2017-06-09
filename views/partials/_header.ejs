@@ -5,9 +5,16 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TinyApp</title>
-  <style>
-    form {
-      display: inline-block;
+  <style>    
+    article {
+      max-width: 800px;
+      margin: 1em auto;
+      border-radius: 3px;
+      padding: 2em;
+      background: #DDF;
+    }
+    td .button {
+      margin-bottom: 0;
     }
   </style>
   <link rel="stylesheet" href="/css/foundation.css">
@@ -33,7 +40,7 @@
           <li><a class="button hollow" href="/login">Login</a></li>
           <li><a class="button primary" href="/register">Register</a></li>
         <% } else { %>
-          <span>Hello <%= user.email %>!</span>
+          <li><span>Hello <%= user.email %>!</span></li>
           <li><a class="button hollow" href="/logout">Logout</a></li>
         <% } %>
         </ul>

@@ -15,6 +15,7 @@ TinyApp is a server that shortens URLs, similar to bit.ly, goo.gl and tinyurl.co
   - bcrypt
   - body-parser
   - cookie-session
+  - method-override
   
 ## Todo
 - Add css

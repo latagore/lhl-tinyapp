@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
@@ -12,8 +13,10 @@ app.use(cookieSession({
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
-app.set("view engine", "ejs");
+app.use(methodOverride('_method'));
 app.use(express.static('site'));
+
+app.set("view engine", "ejs");
 
 const urlDatabase = {};
 const users = {};
@@ -172,7 +175,7 @@ app.post("/urls", (req, res) => {
 });
 
 // Delete URL API route
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id", (req, res) => {
   const urlEntry = urlDatabase[req.params.id];
   if (req.session.user_id === urlEntry.ownerId) {
     delete urlDatabase[req.params.id];
@@ -183,7 +186,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 // Update URL API route
-app.post("/urls/:id/update", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   const urlEntry = urlDatabase[req.params.id];
   if (req.session.user_id === urlEntry.ownerId) {
     urlDatabase[req.params.id].link = req.body.url;

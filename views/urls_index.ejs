@@ -1,20 +1,36 @@
 <%- include('partials/_header', {user: user}) %>
-<ul>
-  <% for (let key in urls) { %>
-  <li>
-    <code><strong><%= key %>:</strong> <a href="<%= urls[key].link %>"><%= urls[key].link %></a></code>
-    <a href="/urls/<%= key %>">Edit</a>
-    <form method="POST" action="/urls/<%= key %>/delete">
-      <button type="submit">Delete</button>
-    </form>
+<article>
+  <h2>URL List</h2>
+  <% if (urls) { %>
+    <table>
+      <tr>
+        <th>Short URL</th>
+        <th>Full URL</th>
+        <th>Controls</th>
+      </tr>
+      <% for (let key in urls) { %>
+      <tr>
+        <td><strong><a href="<%= urls[key].link %>"><%= key %></a></strong></td>
+        <td><a href="<%= urls[key].link %>"><%= urls[key].link %></a></td>
+        <td>
+          <form method="POST" action="/urls/<%= key %>?_method=DELETE">
+            <a class="button small hollow" href="/urls/<%= key %>">Edit</a>
+            <button class="button small hollow alert" type="submit">Delete</button>
+          </form>
+        </td>
 
-  </li>
+      </tr>
+      <% } %>
+    </table>
   <% } %>
-</ul>
-<% if (!user) { %>
-  <p>Welcome to <code>SuperCoolUrlShortener</code>! Login or register to create shorter links!</p>
-<% } else if (!urls) { %>
-  <p>You currently don't have any shortened URLs. Click <a href="/urls/new">here</a> to create one.</p>
-<% } %>
-<a href="/urls/new">Add a new link</a>
+  <% if (!user) { %>
+    <p>Welcome to <strong>SuperCoolUrlShortener</strong>! <a href="/login">Login</a> or <a href="/register">register</a> to create shorter links!</p>
+  <% } else if (!urls) { %>
+    <p>You currently don't have any shortened URLs. Click <a href="/urls/new">here</a> to create one.</p>
+  <% } %>
+  
+  <% if (user) { %>
+    <a class="button hollow" href="/urls/new">Add a new link</a>
+  <% } %>
+</article>
 <%- include partials/_footer %>
