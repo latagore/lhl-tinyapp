@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const methodOverride = require('method-override');
+const validator = require('validator');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
@@ -46,6 +47,14 @@ function urlsForUser(user_id) {
     }
   }
   return hasResults ? result : undefined;
+}
+
+const IS_URL_OPTIONS = {
+  require_protocol: true,
+  require_valid_protocol: false
+}
+function isURL(string) {
+  return validator.isURL(string, IS_URL_OPTIONS);
 }
 
 // ============================
@@ -164,9 +173,13 @@ app.get("/urls/:id", (req, res, next) => {
 app.post("/urls", (req, res) => {
   if (req.session.user_id) {
     let key = generateRandomString();
+    let link = req.body.longURL;
+    if (!isURL(link)) {
+      link = "https://" + link;
+    }
     urlDatabase[key] = {
       ownerId: req.session.user_id,
-      link: req.body.longURL
+      link: link
     };
     res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
   } else {
