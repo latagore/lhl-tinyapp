@@ -63,6 +63,9 @@ function urlsForUser(user_id) {
   return hasResults ? result : undefined;
 }
 
+// ============================
+// user login management routes
+// ============================
 app.get("/login", (req, res) => {
   if (users[req.session.user_id]) {
     res.redirect("/urls");
@@ -89,10 +92,12 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.post("/logout", (req, res) => {
+app.get("/logout", logoutRoute);
+app.post("/logout", logoutRoute);
+function logoutRoute(req, res) {
   req.session = null;
   res.redirect("/urls");
-});
+}
 
 app.get("/register", (req, res) => {
   res.render("register", {user: users[req.session.user_id]});
@@ -115,6 +120,11 @@ app.post("/register", (req, res) => {
 
 });
 
+// ====================
+// URL page routes
+// ====================
+
+// Create new URL page route
 app.get("/urls/new", (req, res) => {
   if (req.session.user_id) {
     res.render("urls_new", {user: users[req.session.user_id]});
@@ -123,6 +133,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
+// Show URLs route
 app.get("/urls", (req, res) => {
   const templateVars = { 
     urls: urlsForUser(req.session.user_id),
@@ -131,16 +142,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  let key = generateRandomString();
-  urlDatabase[key] = {
-    ownerId: req.session.user_id,
-    link: req.body.longURL
-  };
-  res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
-});
-
-
+// View/edit URL page route
 app.get("/urls/:id", (req, res) => {
   const urlEntry = urlDatabase[req.params.id];
   if (req.session.user_id === urlEntry.ownerId) {
@@ -156,6 +158,21 @@ app.get("/urls/:id", (req, res) => {
   }
 });
 
+// ================
+// URL API routes
+// ================
+
+// Create new URL API route
+app.post("/urls", (req, res) => {
+  let key = generateRandomString();
+  urlDatabase[key] = {
+    ownerId: req.session.user_id,
+    link: req.body.longURL
+  };
+  res.redirect(`urls/${key}`);         // Respond with 'Ok' (we will replace this)
+});
+
+// Delete URL API route
 app.post("/urls/:id/delete", (req, res) => {
   const urlEntry = urlDatabase[req.params.id];
   if (req.session.user_id === urlEntry.ownerId) {
@@ -166,6 +183,7 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
+// Update URL API route
 app.post("/urls/:id/update", (req, res) => {
   const urlEntry = urlDatabase[req.params.id];
   if (req.session.user_id === urlEntry.ownerId) {
@@ -176,6 +194,10 @@ app.post("/urls/:id/update", (req, res) => {
   }
 });
 
+
+// ============================
+// URL shorten/redirect route
+// ============================
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL].link;
   if (longURL) {
