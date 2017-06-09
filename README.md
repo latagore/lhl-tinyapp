@@ -19,5 +19,3 @@ TinyApp is a server that shortens URLs, similar to bit.ly, goo.gl and tinyurl.co
 ## Todo
 - Add css
 - Replace send responses with actual pages
-
-  
