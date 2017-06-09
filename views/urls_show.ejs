@@ -13,14 +13,28 @@
     <button class="button" type="submit">Update</button>
     
   </form>
-  <div>Visits: <%= visits.length %>, unique visits: <%= uniqueVisits %></div>
-  <div class="log">
-  <h5>Visit History (ip, time)</h5>
-    <ol>
-      <% visits.forEach((v) => { %>
-        <li><%= v.id %>, <%= v.time %></li>
-      <% }) %>
-    </ol>
-  </div>
+  
+  <ul class="log accordion" data-accordion data-allow-all-closed="true">
+    <li class="accordion-item" data-accordion-item>
+      <a href="#" class="accordion-title">Statistics</a>
+      
+      <div class="accordion-content" data-tab-content>
+        <div>Visits: <%= visits.length %></div>
+        <div>Unique visitors: <%= uniqueVisits %></div>
+
+        <h4>Visit History (ip, time)</h4>
+        <% if (visits.length) { %>
+        <ol>
+          <% visits.forEach((v) => { %>
+            <li><%= v.id %>, <%= v.time %></li>
+          <% }) %>
+          
+        </ol>
+        <% } else { %>
+          <div>No visitors yet.</div>
+        <% } %>
+      </div>
+    </li>
+  </ul>
 </article>
 <%- include partials/_footer %>
