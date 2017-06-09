@@ -130,7 +130,6 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
   let key = generateRandomString();
   urlDatabase[key] = {
     ownerId: req.session.user_id,
