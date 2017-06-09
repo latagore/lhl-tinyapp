@@ -14,27 +14,29 @@
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-  <% if (typeof user === 'undefined') { %>
-    <form method="POST" action="/login">
-      <label>Email: <input type="email" name="email" /></label>
-      <label>Password: <input type="password" name="password" /></label>
-      <button type="submit">Login</button>
-    </form>
-  <% } else { %>
-    <div>
-      Hello <%= user.email %>!
+  <nav class="top-bar">
+    <div class="top-bar-title">
+      <span data-responsive-toggle="responsive-menu" data-hide-for="medium">
+        <button class="menu-icon dark" type="button" data-toggle></button>
+      </span>
+      <strong>SuperCoolURLShortener</strong>
     </div>
-    
-  <% } %>
-  <nav>
-    <a href="/urls">
-      Main
-    </a>
-    
-    <% if (!user) {%>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    <% } else { %>
-      <a href="/logout">Logout</a>
-    <% } %>
+    <div id="responsive-menu">
+      <div class="top-bar-left">
+        <ul class="menu">
+          <li><a href="/urls">Main</a></li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <ul class="menu">
+        <% if (!user) {%>
+          <li><a class="button hollow" href="/login">Login</a></li>
+          <li><a class="button primary" href="/register">Register</a></li>
+        <% } else { %>
+          <span>Hello <%= user.email %>!</span>
+          <li><a class="button hollow" href="/logout">Logout</a></li>
+        <% } %>
+        </ul>
+      </div>
+    </div>
   </nav>
