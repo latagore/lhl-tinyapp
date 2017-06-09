@@ -1,5 +1,5 @@
 # TinyApp project
-TinyApp is a server that shortens URLs, similar to bit.ly, goo.gl and tinyurl.com. It is built with Node and Express.
+TinyApp is a server that shortens URLs, similar to bit.ly, goo.gl and tinyurl.com. It is built with Node and Express. The pages are built with Foundation so the website is responsive.
 
 ## Quick start
 1. Install [node.js](https://nodejs.org/en/download/).
@@ -17,8 +17,5 @@ TinyApp is a server that shortens URLs, similar to bit.ly, goo.gl and tinyurl.co
   - bcrypt
   - body-parser
   - cookie-session
+  - cookie-parser
   - method-override
-  
-## Todo
-- Add css
-- Replace send responses with actual pages
