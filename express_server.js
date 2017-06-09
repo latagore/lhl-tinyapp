@@ -123,7 +123,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const templateVars = { 
-    urls: urlDatabase,
+    urls: urlsForUser(req.session.user_id),
     user: users[req.session.user_id]
   };
   res.render("urls_index", templateVars);
